@@ -1,4 +1,5 @@
 # GraphIntegrator
+## Overview
 Uses Python (MatPlotLib) to generate graphs from user data inputs. The current usage will include:
 - Line graphs (time axis for extended analysis)
 - Pie charts (comparative option for percentages)
@@ -6,7 +7,7 @@ Uses Python (MatPlotLib) to generate graphs from user data inputs. The current u
 - Scatter graphs (comfortable trend analysis option for data)
 
   
-Current To-Do plan includes:
+## Current To-Do plan includes:
 - Proper implementation of line graphs, pie charts, bar charts, and scatter graphs.
 - Application of "Lines of best fit" for scatter graphs, allowing for easier visual analysis of data.
 - Integrating horizontal as well as vertical comparisons for data (data can be compared either:

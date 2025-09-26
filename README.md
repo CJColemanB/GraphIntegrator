@@ -4,6 +4,8 @@ Uses Python (MatPlotLib) to generate graphs from user data inputs. The current u
 - Pie charts (comparative option for percentages)
 - Bar charts (another strong comparative option)
 - Scatter graphs (comfortable trend analysis option for data)
+
+  
 Current To-Do plan includes:
 - Proper implementation of line graphs, pie charts, bar charts, and scatter graphs.
 - Application of "Lines of best fit" for scatter graphs, allowing for easier visual analysis of data.

@@ -6,5 +6,5 @@ Uses Python (MatPlotLib) to generate graphs from user data inputs. The current u
 
 Current To-Do plan includes:
 - Integrating horizontal as well as vertical comparisons for data (data can be compared either:
--- on a time scale with previous inputs of the same sorts, or
--- on the same time scale, but with different data, given that the type of data being compared is identical, eg different test grades across a school as opposed to a subject) 
+-> on a time scale with previous inputs of the same sorts, or
+-> on the same time scale, but with different data, given that the type of data being compared is identical, eg different test grades across a school as opposed to a subject) 

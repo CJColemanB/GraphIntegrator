@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Excel</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="dark-bg">
+    {% include 'header.html' %}
+    <div class="container dull-yellow-border">
+        <h2 style="color:#bfa94a;">Upload Excel Spreadsheet</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <label>Select Excel file (.xlsx):</label>
+            <input type="file" name="excel_file" accept=".xlsx" required>
+            <button type="submit">Upload</button>
+        </form>
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        {% if success %}
+        <div class="success">{{ success }}</div>
+        {% endif %}
+        <a href="/add">Add Person Manually</a>
+    </div>
+</body>
+</html>

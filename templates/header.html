@@ -1,0 +1,41 @@
+<!-- templates/header.html -->
+<div class="header dull-yellow-border">
+    <div class="header-title">GraphIntegrator</div>
+    <div class="nav-dropdown">
+        <select onchange="location = this.value;">
+            <option value="/">Home</option>
+            <option value="/add">Add Person</option>
+            <option value="/upload">Upload Excel</option>
+            <option value="/list">View People</option>
+        </select>
+    </div>
+</div>
+<style>
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #232323;
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 2rem;
+}
+.header-title {
+    color: #e0e0e0;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+.dull-yellow-border {
+    border: 2px solid #bfa94a;
+    box-shadow: 0 0 10px #bfa94a;
+}
+.nav-dropdown select {
+    background: #232323;
+    color: #bfa94a;
+    border: 1px solid #bfa94a;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+</style>

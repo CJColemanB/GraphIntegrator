@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Person</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="dark-bg">
+    {% include 'header.html' %}
+    <div class="container dull-yellow-border">
+        <h2 style="color:#bfa94a;">Add Person</h2>
+        <form method="POST">
+            <label>Forename:</label>
+            <input type="text" name="forename" required>
+            <label>Middle Name (optional):</label>
+            <input type="text" name="middle_name">
+            <label>Surname:</label>
+            <input type="text" name="surname" required>
+            <label>Date of Birth:</label>
+            <input type="date" name="dob" required>
+            <label>Subject:</label>
+            <select name="subject" required>
+                {% for subject in subjects %}
+                <option value="{{ subject }}">{{ subject }}</option>
+                {% endfor %}
+            </select>
+            <label>Grade:</label>
+            <select name="grade" required>
+                {% for grade in grades %}
+                <option value="{{ grade }}">{{ grade }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Add</button>
+        </form>
+        <a href="/list">View All People</a>
+    </div>
+</body>
+</html>

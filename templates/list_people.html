@@ -7,33 +7,111 @@
 </head>
 <body class="dark-bg">
     {% include 'header.html' %}
-    <div class="container dull-yellow-border">
-        <h2 style="color:#bfa94a;">People List</h2>
+    <div class="container navy-border page-hero">
+        <h2 class="page-title">People List</h2>
+        <style>
+        body.dark-bg {
+            background: linear-gradient(135deg, #2a1847 0%, #3a2352 100%);
+        }
+        button, .nav-btn {
+            background: linear-gradient(90deg, #b47cff 0%, #7c4dff 100%);
+            border: 2px solid #b47cff;
+            color: #fff;
+        }
+        button:hover, .nav-btn:hover {
+            background: #3a2352;
+            color: #b47cff;
+            box-shadow: 0 8px 32px #b47cff;
+        }
+        </style>
+        <form id="searchForm" method="GET" style="margin-bottom:2rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+            <div class="search-magnifier">
+                <input type="text" name="search" id="searchInput" placeholder="Search by name..." value="{{ request.args.get('search', '') }}" autocomplete="off">
+                <span class="magnifier-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#b47cff" stroke-width="2"/><line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#b47cff" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+            </div>
+            <select name="sort_by" id="sortBy" style="padding:0.5rem; border-radius:7px; border:1px solid #b47cff;">
+                <option value="forename" {% if request.args.get('sort_by') == 'forename' %}selected{% endif %}>Sort by Forename</option>
+                <option value="surname" {% if request.args.get('sort_by') == 'surname' %}selected{% endif %}>Sort by Surname</option>
+                <option value="dob" {% if request.args.get('sort_by') == 'dob' %}selected{% endif %}>Sort by Date of Birth</option>
+                <option value="grade" {% if request.args.get('sort_by') == 'grade' %}selected{% endif %}>Sort by Grade</option>
+            </select>
+            <select name="order" id="orderBy" style="padding:0.5rem; border-radius:7px; border:1px solid #b47cff;">
+                <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>Ascending</option>
+                <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>Descending</option>
+            </select>
+        </form>
+        <form method="POST">
         <table>
             <thead>
                 <tr>
-                    <th>Forename</th>
+                    <th><a href="?sort_by=forename&order={% if request.args.get('sort_by') == 'forename' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Forename {% if request.args.get('sort_by') == 'forename' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
                     <th>Middle Name</th>
-                    <th>Surname</th>
-                    <th>Date of Birth</th>
+                    <th><a href="?sort_by=surname&order={% if request.args.get('sort_by') == 'surname' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Surname {% if request.args.get('sort_by') == 'surname' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
+                    <th><a href="?sort_by=dob&order={% if request.args.get('sort_by') == 'dob' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Date of Birth {% if request.args.get('sort_by') == 'dob' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
                     <th>Subject</th>
-                    <th>Grade</th>
+                    <th><a href="?sort_by=grade&order={% if request.args.get('sort_by') == 'grade' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Grade {% if request.args.get('sort_by') == 'grade' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
+                    <th>Remove</th>
                 </tr>
             </thead>
             <tbody>
                 {% for person in people %}
                 <tr>
-                    <td>{{ person[0] }}</td>
                     <td>{{ person[1] }}</td>
                     <td>{{ person[2] }}</td>
                     <td>{{ person[3] }}</td>
                     <td>{{ person[4] }}</td>
                     <td>{{ person[5] }}</td>
+                    <td>{{ person[6] }}</td>
+                    <td>
+                        <button type="submit" name="remove_id" value="{{ person[0] }}" onclick="return confirm('Remove this person?');">Remove</button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        </form>
         <a href="/add">Add Another Person</a>
+        <style>
+        .arrow { font-size: 1rem; color: #b47cff; margin-left: 4px; }
+        .search-magnifier {
+            position: relative;
+            display: flex;
+            align-items: center;
+            transition: width 0.3s;
+            width: 40px;
+        }
+        .search-magnifier:focus-within, .search-magnifier:hover {
+            width: 220px;
+        }
+        .search-magnifier input {
+            width: 0;
+            opacity: 0;
+            transition: width 0.3s, opacity 0.3s;
+            position: absolute;
+            left: 40px;
+            background: #23234a;
+            color: #fff;
+            border: 1px solid #b47cff;
+            border-radius: 7px;
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+        .search-magnifier:focus-within input, .search-magnifier:hover input {
+            width: 160px;
+            opacity: 1;
+        }
+        .magnifier-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        </style>
+        <!-- Search only on Enter (default form behavior) -->
     </div>
 </body>
 </html>

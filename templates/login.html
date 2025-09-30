@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .login-container {
+            background: rgba(35,35,50,0.98);
+            border-radius: 18px;
+            max-width: 400px;
+            margin: 8rem auto;
+            box-shadow: 0 8px 32px #0d1333cc;
+            border: 2px solid #b47cff;
+            padding: 2rem;
+            text-align: center;
+        }
+        .login-title {
+            color: #b47cff;
+            font-size: 2rem;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .login-label {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .login-input {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1rem;
+            background: #23234a;
+            color: #f1f1f1;
+            border: 1px solid #b47cff;
+            border-radius: 7px;
+            font-size: 1.1rem;
+        }
+        .login-btn {
+            background: linear-gradient(90deg, #b47cff 0%, #7c4dff 100%);
+            border: 2px solid #b47cff;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem 2.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 18px #0d1333;
+            letter-spacing: 1px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .login-btn:hover {
+            background: #3a2352;
+            color: #b47cff;
+            box-shadow: 0 8px 32px #b47cff;
+            transform: translateY(-2px) scale(1.04);
+        }
+        .login-error {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="dark-bg">
+    <div class="login-container">
+        <div class="login-title">Login</div>
+        {% if error %}
+        <div class="login-error">{{ error }}</div>
+        {% endif %}
+        <form method="POST">
+            <label class="login-label">Username</label>
+            <input type="text" name="username" class="login-input" required>
+            <label class="login-label">Password</label>
+            <input type="password" name="password" class="login-input" required>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+</body>
+</html>

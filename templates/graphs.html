@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Graphs</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .graphs-container {
+            background: rgba(35,35,50,0.98);
+            border-radius: 18px;
+            max-width: 800px;
+            margin: 4rem auto;
+            box-shadow: 0 8px 32px #0d1333cc;
+            border: 2px solid #b47cff;
+            padding: 2rem;
+        }
+        .graphs-title {
+            color: #b47cff;
+            font-size: 2rem;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .graph-select {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .graph-btn {
+            background: linear-gradient(90deg, #b47cff 0%, #7c4dff 100%);
+            border: 2px solid #b47cff;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.7rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 18px #0d1333;
+            letter-spacing: 1px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .graph-btn:hover {
+            background: #3a2352;
+            color: #b47cff;
+            box-shadow: 0 8px 32px #b47cff;
+            transform: translateY(-2px) scale(1.04);
+        }
+    </style>
+</head>
+<body class="dark-bg">
+    <div class="graphs-container">
+        <div class="graphs-title">Generate Graphs</div>
+        <form class="graph-select" method="POST">
+            <label style="color:#e0e0e0; font-size:1.1rem;">Graph Type:</label>
+            <select name="graph_type" style="padding:0.5rem; border-radius:7px; border:1px solid #b47cff;">
+                <option value="line">Line Graph</option>
+                <option value="bar">Bar Chart</option>
+            </select>
+            <button type="submit" class="graph-btn">Generate</button>
+        </form>
+        <canvas id="graphCanvas" width="700" height="400" style="background:#23234a; border-radius:12px;"></canvas>
+    </div>
+    <script>
+    {% if graph_data %}
+    const ctx = document.getElementById('graphCanvas').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: '{{ graph_type }}',
+        data: {
+            labels: {{ graph_data.labels|safe }},
+            datasets: [{
+                label: 'Grades',
+                data: {{ graph_data.values|safe }},
+                backgroundColor: '{{ "rgba(180,124,255,0.5)" if graph_type == "bar" else "rgba(180,124,255,0.2)" }}',
+                borderColor: '#b47cff',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+    {% endif %}
+    </script>
+</body>
+</html>

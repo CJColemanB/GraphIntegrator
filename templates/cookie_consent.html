@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie Consent</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .consent-container {
+            background: rgba(35,35,50,0.98);
+            border-radius: 18px;
+            max-width: 400px;
+            margin: 8rem auto;
+            box-shadow: 0 8px 32px #0d1333cc;
+            border: 2px solid #b47cff;
+            padding: 2rem;
+            text-align: center;
+        }
+        .consent-title {
+            color: #b47cff;
+            font-size: 2rem;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .consent-desc {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        .consent-btn {
+            background: linear-gradient(90deg, #b47cff 0%, #7c4dff 100%);
+            border: 2px solid #b47cff;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem 2.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 18px #0d1333;
+            letter-spacing: 1px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .consent-btn:hover {
+            background: #3a2352;
+            color: #b47cff;
+            box-shadow: 0 8px 32px #b47cff;
+            transform: translateY(-2px) scale(1.04);
+        }
+    </style>
+</head>
+<body class="dark-bg">
+    <div class="consent-container">
+        <div class="consent-title">Cookie Consent</div>
+        <div class="consent-desc">
+            This site uses cookies to provide you with a personalized experience and unique data storage. By continuing, you agree to the use of cookies.
+        </div>
+        <form method="POST">
+            <button type="submit" class="consent-btn">Accept &amp; Continue</button>
+        </form>
+    </div>
+</body>
+</html>

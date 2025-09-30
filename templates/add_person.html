@@ -7,8 +7,23 @@
 </head>
 <body class="dark-bg">
     {% include 'header.html' %}
-    <div class="container dull-yellow-border">
-        <h2 style="color:#bfa94a;">Add Person</h2>
+    <div class="container navy-border page-hero">
+        <h2 class="page-title">Add Person</h2>
+        <style>
+        body.dark-bg {
+            background: linear-gradient(135deg, #2a1847 0%, #3a2352 100%);
+        }
+        button, .nav-btn {
+            background: linear-gradient(90deg, #b47cff 0%, #7c4dff 100%);
+            border: 2px solid #b47cff;
+            color: #fff;
+        }
+        button:hover, .nav-btn:hover {
+            background: #3a2352;
+            color: #b47cff;
+            box-shadow: 0 8px 32px #b47cff;
+        }
+        </style>
         <form method="POST">
             <label>Forename:</label>
             <input type="text" name="forename" required>

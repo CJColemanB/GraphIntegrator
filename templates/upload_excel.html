@@ -7,12 +7,49 @@
 </head>
 <body class="dark-bg">
     {% include 'header.html' %}
-    <div class="container dull-yellow-border">
-        <h2 style="color:#bfa94a;">Upload Excel Spreadsheet</h2>
+    <div class="container navy-border page-hero">
+        <h2 class="page-title">Upload Excel Spreadsheet</h2>
+        <style>
+        body.dark-bg {
+            background: linear-gradient(135deg, #2a1847 0%, #3a2352 100%);
+        }
+        .upload-btn {
+            margin-top: 2rem;
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(90deg, #6a6fd4 0%, #1a237e 100%);
+            color: #fff;
+            border: 2px solid #1a237e;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 18px #0d1333;
+            letter-spacing: 1px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .upload-btn:hover {
+            background: #23234a;
+            color: #b3b6f7;
+            box-shadow: 0 6px 24px #1a237e;
+            transform: translateY(-2px) scale(1.04);
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.2rem 0.5rem;
+            }
+            .upload-btn {
+                width: 100%;
+                font-size: 1rem;
+                padding: 1rem 0;
+            }
+        }
+        </style>
         <form method="POST" enctype="multipart/form-data">
             <label>Select Excel file (.xlsx):</label>
             <input type="file" name="excel_file" accept=".xlsx" required>
-            <button type="submit">Upload</button>
+            <button type="submit" class="upload-btn">Upload</button>
         </form>
         {% if error %}
         <div class="error">{{ error }}</div>

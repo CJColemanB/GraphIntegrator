@@ -8,14 +8,109 @@
 </head>
 <body class="dark-bg">
     {% include 'header.html' %}
-    <div class="container dull-yellow-border">
-        <h2 style="color:#bfa94a;">Welcome to GraphIntegrator</h2>
-        <p>This system allows you to manage person data, upload Excel spreadsheets, and view all records with a clean, dark UI.</p>
-        <ul>
+    <div class="container navy-border home-hero">
+        <h1 class="hero-title">Graph Integrator</h1>
+        <div class="hero-divider"></div>
+        <div class="hero-btns">
+            <a href="/add" class="nav-btn hero-btn">Add Person</a>
+            <a href="/upload" class="nav-btn hero-btn">Upload Excel</a>
+            <a href="/list" class="nav-btn hero-btn">View People</a>
+        </div>
+        <p class="hero-desc">This system allows you to manage person data, upload Excel spreadsheets, and view all records with a clean, modern UI.</p>
+        <ul class="hero-list">
             <li>Add new person records manually</li>
             <li>Upload Excel spreadsheets for bulk import</li>
             <li>View all stored people and their grades</li>
         </ul>
     </div>
+    <style>
+    body.dark-bg {
+        background: linear-gradient(135deg, #2a1847 0%, #3a2352 100%);
+    }
+    .hero-btn {
+        background: linear-gradient(90deg, #b47cff 0%, #7c4dff 100%);
+        border: 2px solid #b47cff;
+        color: #fff;
+    }
+    .hero-btn:hover {
+        background: #3a2352;
+        color: #b47cff;
+        box-shadow: 0 8px 32px #b47cff;
+    }
+    </style>
+    <style>
+    .home-hero {
+        text-align: center;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        animation: fadeIn 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-title {
+        color: #e1c6f7;
+        font-size: 3.5rem;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+        text-shadow: 0 4px 24px #1a237e99;
+        animation: fadeIn 1s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-subtitle {
+        color: #b3b6f7;
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 2rem;
+        animation: fadeIn 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-divider {
+        width: 80px;
+        height: 5px;
+        background: linear-gradient(90deg, #6a6fd4 0%, #1a237e 100%);
+        border-radius: 3px;
+        margin: 0 auto 2rem auto;
+        animation: fadeIn 1.4s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-btns {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        animation: fadeIn 1.6s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-btn {
+        font-size: 1.2rem;
+        padding: 1.1rem 2.5rem;
+        border-radius: 32px;
+        box-shadow: 0 6px 24px #1a237e99;
+        background: linear-gradient(90deg, #a16fd4 0%, #1a237e 100%);
+        border: 2px solid #6a6fd4;
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 1px;
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+        text-decoration: none;
+        animation: fadeIn 1.8s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-btn:hover {
+        background: #23234a;
+        color: #e1c6f7;
+        box-shadow: 0 8px 32px #6a6fd4;
+        transform: translateY(-2px) scale(1.06);
+    }
+    .hero-desc {
+        color: #b3b6f7;
+        font-size: 1.15rem;
+        margin-bottom: 1rem;
+        animation: fadeIn 2s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-list {
+        color: #e0e0e0;
+        text-align: left;
+        max-width: 400px;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        animation: fadeIn 2.2s cubic-bezier(.4,0,.2,1);
+    }
+    </style>
 </body>
 </html>

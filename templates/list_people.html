@@ -25,6 +25,12 @@
         }
         </style>
         <form id="searchForm" method="GET" style="margin-bottom:2rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+            <label for="db_name">Select Database:</label>
+            <select name="db_name" id="db_name" required onchange="this.form.submit()">
+                {% for db in dbs %}
+                <option value="{{ db }}" {% if db == selected_db %}selected{% endif %}>{{ db }}</option>
+                {% endfor %}
+            </select>
             <div class="search-magnifier">
                 <input type="text" name="search" id="searchInput" placeholder="Search by name..." value="{{ request.args.get('search', '') }}" autocomplete="off">
                 <span class="magnifier-icon">

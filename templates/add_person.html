@@ -25,6 +25,16 @@
         }
         </style>
         <form method="POST">
+            <label for="db_name">Select Database:</label>
+            <select name="db_name" id="db_name" required style="margin-bottom:1rem;">
+                {% for db in dbs %}
+                <option value="{{ db }}" {% if db == selected_db %}selected{% endif %}>{{ db }}</option>
+                {% endfor %}
+            </select>
+            {% if dbs|length < 5 %}
+            <input type="text" name="new_db_name" placeholder="New database name" style="margin-bottom:1rem;">
+            <button type="submit" name="add_db" value="1">Add Database</button>
+            {% endif %}
             <label>Forename:</label>
             <input type="text" name="forename" required>
             <label>Middle Name (optional):</label>

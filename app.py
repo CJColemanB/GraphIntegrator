@@ -1,3 +1,20 @@
+# --- Per-user DB Management ---
+def get_user_db_list(user_id):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS user_db (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        db_name TEXT NOT NULL,
+        UNIQUE(user_id, db_name)
+    )''')
+    c.execute('SELECT db_name FROM user_db WHERE user_id=?', (user_id,))
+    dbs = [row[0] for row in c.fetchall()]
+    conn.close()
+    return dbs
+
+def get_db_path(user_id, db_name):
+    return f"people_{user_id}_{db_name}.db"
 import json
 import hashlib
 from flask import Flask, render_template, request, redirect, url_for, make_response
@@ -27,11 +44,16 @@ def init_user_db():
         conn.close()
 init_user_db()
 
-def get_db_name():
-    user_id = request.cookies.get('user_id')
+
+# --- User DB Management ---
+from flask import session
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'devkey')
+
+def get_logged_in_user():
+    user_id = session.get('user_id')
     if not user_id:
-        user_id = str(uuid.uuid4())
-    return f"people_{user_id}.db", user_id
+        return None
+    return user_id
 
 def init_db(db_name):
     if not os.path.exists(db_name):
@@ -181,54 +203,68 @@ def add_person():
             return redirect(url_for('list_people'))
     return render_template('add_person.html', subjects=subjects, error=error)
 
+
 @app.route('/list', methods=['GET', 'POST'])
 def list_people():
-    db_name, user_id = get_db_name()
-    init_db(db_name)
-    # Remove person
-    if request.method == 'POST':
-        person_id = request.form.get('remove_id')
-        if person_id:
-            conn = sqlite3.connect(db_name)
-            c = conn.cursor()
-            c.execute('DELETE FROM person WHERE id = ?', (person_id,))
-            conn.commit()
-            conn.close()
-    # Search and sort
-    search = request.args.get('search', '').strip()
-    sort_by = request.args.get('sort_by', 'forename')
-    order = request.args.get('order', 'asc')
-    valid_sort = ['forename', 'middle_name', 'surname', 'dob', 'subject', 'grade']
-    if sort_by not in valid_sort:
-        sort_by = 'forename'
-    order_sql = 'ASC' if order == 'asc' else 'DESC'
-    query = 'SELECT id, forename, middle_name, surname, dob, subject, grade FROM person'
-    params = []
-    if search:
-        query += ' WHERE forename LIKE ? OR surname LIKE ?'
-        params.extend([f'%{search}%', f'%{search}%'])
-    # Special sorting for middle_name: empty values go last
-    if sort_by == 'middle_name':
-        query += f' ORDER BY CASE WHEN middle_name="" OR middle_name IS NULL THEN 1 ELSE 0 END, middle_name {order_sql}'
-    else:
-        query += f' ORDER BY {sort_by} {order_sql}'
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
-    c.execute(query, params)
-    people = c.fetchall()
-    conn.close()
-    return render_template('list_people.html', people=people)
+    user_id = get_logged_in_user()
+    if not user_id:
+        return redirect(url_for('login'))
+    dbs = get_user_db_list(user_id)
+    selected_db = request.args.get('db_name') or (dbs[0] if dbs else None)
+    people = []
+    if selected_db:
+        db_path = get_db_path(user_id, selected_db)
+        init_db(db_path)
+        # Remove person
+        if request.method == 'POST':
+            person_id = request.form.get('remove_id')
+            if person_id:
+                conn = sqlite3.connect(db_path)
+                c = conn.cursor()
+                c.execute('DELETE FROM person WHERE id = ?', (person_id,))
+                conn.commit()
+                conn.close()
+        # Search and sort
+        search = request.args.get('search', '').strip()
+        sort_by = request.args.get('sort_by', 'forename')
+        order = request.args.get('order', 'asc')
+        valid_sort = ['forename', 'middle_name', 'surname', 'dob', 'subject', 'grade']
+        if sort_by not in valid_sort:
+            sort_by = 'forename'
+        order_sql = 'ASC' if order == 'asc' else 'DESC'
+        query = 'SELECT id, forename, middle_name, surname, dob, subject, grade FROM person'
+        params = []
+        if search:
+            query += ' WHERE forename LIKE ? OR surname LIKE ?'
+            params.extend([f'%{search}%', f'%{search}%'])
+        # Special sorting for middle_name: empty values go last
+        if sort_by == 'middle_name':
+            query += f' ORDER BY CASE WHEN middle_name="" OR middle_name IS NULL THEN 1 ELSE 0 END, middle_name {order_sql}'
+        else:
+            query += f' ORDER BY {sort_by} {order_sql}'
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        c.execute(query, params)
+        people = c.fetchall()
+        conn.close()
+    return render_template('list_people.html', people=people, dbs=dbs, selected_db=selected_db)
+
 
 
 # Excel upload route
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_excel():
-    db_name, user_id = get_db_name()
-    init_db(db_name)
+    user_id = get_logged_in_user()
+    if not user_id:
+        return redirect(url_for('login'))
+    dbs = get_user_db_list(user_id)
+    selected_db = request.form.get('db_name') or (dbs[0] if dbs else None)
     error = None
     success = None
     required_headers = ['forename', 'middle_name', 'surname', 'dob', 'subject', 'grade']
-    if request.method == 'POST':
+    if request.method == 'POST' and selected_db:
+        db_path = get_db_path(user_id, selected_db)
+        init_db(db_path)
         if 'excel_file' not in request.files:
             error = 'No file part.'
         else:
@@ -265,8 +301,6 @@ def upload_excel():
                                 grade = str(data['grade']).strip()
                                 if not forename or not surname or not dob or not subject or not grade:
                                     continue
-                                if subject not in ['Math', 'English', 'Science', 'History', 'Geography']:
-                                    continue
                                 grade_int = int(grade)
                                 if not (0 <= grade_int <= 100):
                                     continue
@@ -275,7 +309,7 @@ def upload_excel():
                                     continue
                             except Exception:
                                 continue
-                            conn = sqlite3.connect(db_name)
+                            conn = sqlite3.connect(db_path)
                             c = conn.cursor()
                             c.execute('''INSERT INTO person (forename, middle_name, surname, dob, subject, grade) VALUES (?, ?, ?, ?, ?, ?)''',
                                       (forename, middle_name, surname, dob, subject, grade_int))
@@ -287,7 +321,7 @@ def upload_excel():
                     error = f"Error reading Excel file: {str(e)}"
                 finally:
                     os.remove(filepath)
-    return render_template('upload_excel.html', error=error, success=success)
+    return render_template('upload_excel.html', error=error, success=success, dbs=dbs, selected_db=selected_db)
 
 if __name__ == '__main__':
     app.run(debug=True)

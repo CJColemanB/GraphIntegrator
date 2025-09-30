@@ -34,17 +34,14 @@
             <label>Date of Birth:</label>
             <input type="date" name="dob" required>
             <label>Subject:</label>
-            <select name="subject" required>
+            <input type="text" name="subject" list="subject-list" required autocomplete="off">
+            <datalist id="subject-list">
                 {% for subject in subjects %}
                 <option value="{{ subject }}">{{ subject }}</option>
                 {% endfor %}
-            </select>
-            <label>Grade:</label>
-            <select name="grade" required>
-                {% for grade in grades %}
-                <option value="{{ grade }}">{{ grade }}</option>
-                {% endfor %}
-            </select>
+            </datalist>
+            <label>Grade (0-100):</label>
+            <input type="number" name="grade" min="0" max="100" required placeholder="Enter grade (0-100)">
             <button type="submit">Add</button>
         </form>
         <a href="/list">View All People</a>

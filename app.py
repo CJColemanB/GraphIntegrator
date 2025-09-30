@@ -86,23 +86,32 @@ def login():
 def graphs():
     db_name, user_id = get_db_name()
     init_db(db_name)
-    graph_type = 'line'
+    axis_options = ['forename', 'middle_name', 'surname', 'dob', 'subject', 'grade']
+    graph_type = request.form.get('graph_type', 'line') if request.method == 'POST' else 'line'
+    x_axis = request.form.get('x_axis', 'forename') if request.method == 'POST' else 'forename'
+    y_axis = request.form.get('y_axis', 'grade') if request.method == 'POST' else 'grade'
+    error = None
+    # Prevent duplicate axis and require at least one numeric axis
+    if x_axis == y_axis:
+        error = "X and Y axis must be different."
+    if not (x_axis == 'grade' or y_axis == 'grade'):
+        error = "At least one axis must be numeric (grade)."
     graph_data = None
-    if request.method == 'POST':
-        graph_type = request.form.get('graph_type', 'line')
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
-    c.execute('SELECT forename, grade FROM person ORDER BY id')
-    rows = c.fetchall()
-    conn.close()
-    labels = [row[0] for row in rows]
-    values = [row[1] for row in rows]
-    if labels and values:
-        graph_data = {
-            'labels': json.dumps(labels),
-            'values': json.dumps(values)
-        }
-    return render_template('graphs.html', graph_type=graph_type, graph_data=graph_data)
+    labels, values = [], []
+    if not error:
+        conn = sqlite3.connect(db_name)
+        c = conn.cursor()
+        c.execute(f'SELECT {x_axis}, {y_axis} FROM person ORDER BY id')
+        rows = c.fetchall()
+        conn.close()
+        labels = [row[0] for row in rows]
+        values = [row[1] for row in rows]
+        if labels and values:
+            graph_data = {
+                'labels': json.dumps(labels),
+                'values': json.dumps(values)
+            }
+    return render_template('graphs.html', graph_type=graph_type, graph_data=graph_data, axis_options=axis_options, x_axis=x_axis, y_axis=y_axis, error=error)
     conn.commit()
     conn.close()
 # Create upload folder if not exists
@@ -135,7 +144,12 @@ def index():
 def add_person():
     db_name, user_id = get_db_name()
     init_db(db_name)
-    subjects = ['Math', 'English', 'Science', 'History', 'Geography']
+    # Get unique subjects from database for autofill
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute('SELECT DISTINCT subject FROM person')
+    subjects = [row[0] for row in c.fetchall()]
+    conn.close()
     error = None
     if request.method == 'POST':
         forename = request.form['forename'].strip()
@@ -147,8 +161,6 @@ def add_person():
         # Data integrity checks
         if not forename or not surname or not dob or not subject or not grade:
             error = "All required fields must be filled."
-        elif not subject in subjects:
-            error = "Invalid subject."
         try:
             grade_int = int(grade)
             if not (0 <= grade_int <= 100):
@@ -186,7 +198,7 @@ def list_people():
     search = request.args.get('search', '').strip()
     sort_by = request.args.get('sort_by', 'forename')
     order = request.args.get('order', 'asc')
-    valid_sort = ['forename', 'surname', 'dob', 'grade']
+    valid_sort = ['forename', 'middle_name', 'surname', 'dob', 'subject', 'grade']
     if sort_by not in valid_sort:
         sort_by = 'forename'
     order_sql = 'ASC' if order == 'asc' else 'DESC'
@@ -195,7 +207,11 @@ def list_people():
     if search:
         query += ' WHERE forename LIKE ? OR surname LIKE ?'
         params.extend([f'%{search}%', f'%{search}%'])
-    query += f' ORDER BY {sort_by} {order_sql}'
+    # Special sorting for middle_name: empty values go last
+    if sort_by == 'middle_name':
+        query += f' ORDER BY CASE WHEN middle_name="" OR middle_name IS NULL THEN 1 ELSE 0 END, middle_name {order_sql}'
+    else:
+        query += f' ORDER BY {sort_by} {order_sql}'
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute(query, params)

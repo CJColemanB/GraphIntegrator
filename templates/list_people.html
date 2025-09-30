@@ -33,8 +33,10 @@
             </div>
             <select name="sort_by" id="sortBy" style="padding:0.5rem; border-radius:7px; border:1px solid #b47cff;">
                 <option value="forename" {% if request.args.get('sort_by') == 'forename' %}selected{% endif %}>Sort by Forename</option>
+                <option value="middle_name" {% if request.args.get('sort_by') == 'middle_name' %}selected{% endif %}>Sort by Middle Name</option>
                 <option value="surname" {% if request.args.get('sort_by') == 'surname' %}selected{% endif %}>Sort by Surname</option>
                 <option value="dob" {% if request.args.get('sort_by') == 'dob' %}selected{% endif %}>Sort by Date of Birth</option>
+                <option value="subject" {% if request.args.get('sort_by') == 'subject' %}selected{% endif %}>Sort by Subject</option>
                 <option value="grade" {% if request.args.get('sort_by') == 'grade' %}selected{% endif %}>Sort by Grade</option>
             </select>
             <select name="order" id="orderBy" style="padding:0.5rem; border-radius:7px; border:1px solid #b47cff;">
@@ -47,10 +49,10 @@
             <thead>
                 <tr>
                     <th><a href="?sort_by=forename&order={% if request.args.get('sort_by') == 'forename' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Forename {% if request.args.get('sort_by') == 'forename' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
-                    <th>Middle Name</th>
+                    <th><a href="?sort_by=middle_name&order={% if request.args.get('sort_by') == 'middle_name' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Middle Name {% if request.args.get('sort_by') == 'middle_name' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
                     <th><a href="?sort_by=surname&order={% if request.args.get('sort_by') == 'surname' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Surname {% if request.args.get('sort_by') == 'surname' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
                     <th><a href="?sort_by=dob&order={% if request.args.get('sort_by') == 'dob' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Date of Birth {% if request.args.get('sort_by') == 'dob' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
-                    <th>Subject</th>
+                    <th><a href="?sort_by=subject&order={% if request.args.get('sort_by') == 'subject' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Subject {% if request.args.get('sort_by') == 'subject' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
                     <th><a href="?sort_by=grade&order={% if request.args.get('sort_by') == 'grade' and request.args.get('order') == 'asc' %}desc{% else %}asc{% endif %}{% if request.args.get('search') %}&search={{ request.args.get('search') }}{% endif %}">Grade {% if request.args.get('sort_by') == 'grade' %}<span class="arrow">{% if request.args.get('order') == 'asc' %}&#9650;{% else %}&#9660;{% endif %}</span>{% endif %}</a></th>
                     <th>Remove</th>
                 </tr>

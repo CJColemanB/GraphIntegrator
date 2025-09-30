@@ -48,29 +48,51 @@
         }
     </style>
 </head>
-<body class="dark-bg">
-    <div class="graphs-container">
-        <div class="graphs-title">Generate Graphs</div>
-        <form class="graph-select" method="POST">
-            <label style="color:#e0e0e0; font-size:1.1rem;">Graph Type:</label>
-            <select name="graph_type" style="padding:0.5rem; border-radius:7px; border:1px solid #b47cff;">
-                <option value="line">Line Graph</option>
-                <option value="bar">Bar Chart</option>
-            </select>
-            <button type="submit" class="graph-btn">Generate</button>
+
+<body class="dark-bg" style="background: linear-gradient(135deg, #2a1847 0%, #3a2352 100%);">
+    {% include 'header.html' %}
+    <div class="container navy-border page-hero" style="max-width: 800px; margin-top: 3rem;">
+        <h2 class="page-title">Generate Graphs</h2>
+        <form class="graph-select" method="POST" style="margin-bottom:2rem;">
+            <div style="display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; align-items:center;">
+                <div>
+                    <label for="graph_type">Graph Type:</label>
+                    <select name="graph_type" id="graph_type" required>
+                        <option value="line" {% if graph_type=='line' %}selected{% endif %}>Line Graph</option>
+                        <option value="bar" {% if graph_type=='bar' %}selected{% endif %}>Bar Chart</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="x_axis">X Axis:</label>
+                    <select name="x_axis" id="x_axis" required>
+                        {% for col in axis_options %}
+                        <option value="{{ col }}" {% if x_axis==col %}selected{% endif %}>{{ col|capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="y_axis">Y Axis:</label>
+                    <select name="y_axis" id="y_axis" required>
+                        {% for col in axis_options %}
+                        <option value="{{ col }}" {% if y_axis==col %}selected{% endif %}>{{ col|capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="graph-btn">Generate</button>
+            </div>
         </form>
         <canvas id="graphCanvas" width="700" height="400" style="background:#23234a; border-radius:12px;"></canvas>
     </div>
-    <script>
     {% if graph_data %}
+    <script>
     const ctx = document.getElementById('graphCanvas').getContext('2d');
     const chart = new Chart(ctx, {
         type: '{{ graph_type }}',
         data: {
-            labels: {{ graph_data.labels|safe }},
+            labels: JSON.parse('{{ graph_data.labels|tojson|safe }}'),
             datasets: [{
-                label: 'Grades',
-                data: {{ graph_data.values|safe }},
+                label: '{{ y_axis|capitalize }}',
+                data: JSON.parse('{{ graph_data.values|tojson|safe }}'),
                 backgroundColor: '{{ "rgba(180,124,255,0.5)" if graph_type == "bar" else "rgba(180,124,255,0.2)" }}',
                 borderColor: '#b47cff',
                 borderWidth: 2,
@@ -80,11 +102,11 @@
         },
         options: {
             scales: {
-                y: { beginAtZero: true, max: 100 }
+                y: { beginAtZero: true }
             }
         }
     });
-    {% endif %}
     </script>
+    {% endif %}
 </body>
 </html>

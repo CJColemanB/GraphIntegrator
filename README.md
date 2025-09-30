@@ -8,6 +8,7 @@ Uses Python (MatPlotLib) to generate graphs from user data inputs. The current u
 
 ## Skills used/required
 - Python
+- Flask (backend sections for the website, in lieu of JavaScript
 - MatPlotLib (library for graph plotting and other mathematical functions for Python)
   
 ## Current To-Do plan:
